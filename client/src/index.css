@@ -1,0 +1,204 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap');
+@import 'tailwindcss';
+@plugin 'tailwindcss-animate';
+
+/*
+  Encore design tokens — the printed ticket stub as an interface.
+  Warm paper, ink, letterpress serif titles, monospace data.
+  Every colour in the app derives from these variables.
+*/
+:root {
+  /* Core palette */
+  --ink: #1a1714;
+  --stamp-red: #c8102e;
+  --marquee-gold: #e4b04a;
+  --ticket-paper: #f3eee3;
+  --seat-free: #3a7d6e;
+  --ash: #8a8178;
+  --seat-taken: #b8afa4;
+
+  /* Seat-tier outline/border accents — outline use ONLY, never fill (fill is
+     reserved exclusively for availability status: available/held/booked/
+     selected, per NFR-20). Subtle tints derived from existing hues. */
+  --tier-standard-outline: rgba(138, 129, 120, 0.35);
+  --tier-premium-outline: rgba(228, 176, 74, 0.65);
+  --tier-recliner-outline: rgba(200, 16, 46, 0.45);
+
+  /* Derived surfaces */
+  --bg: #f3eee3;
+  --surface: #ffffff;
+  --surface-sunk: #ede7da;
+  --border-hair: rgba(26, 23, 20, 0.12);
+  --border-strong: rgba(26, 23, 20, 0.28);
+
+  /* Text */
+  --text-primary: #1a1714;
+  --text-secondary: #55504a;
+  --text-muted: #8a8178;
+  --text-on-ink: #f3eee3;
+
+  /* Status tints */
+  --status-confirmed-bg: #e1f5ee;
+  --status-confirmed-fg: #0f6e56;
+  --status-pending-bg: #faeeda;
+  --status-pending-fg: #854f0b;
+  --status-cancelled-bg: #fcebeb;
+  --status-cancelled-fg: #a32d2d;
+  --status-neutral-bg: #f1efe8;
+  --status-neutral-fg: #444441;
+  /* Deliberately a distinct violet family from Cancelled — Refunded marks
+     the money as actually returned, not merely that the booking is void. */
+  --status-refunded-bg: #edeaf6;
+  --status-refunded-fg: #4b3f8f;
+
+  /* Type */
+  --font-voice: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+
+  /* Radii */
+  --radius: 8px;
+  --radius-card: 12px;
+  --radius-pill: 999px;
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  --shadow-card: 0 1px 3px rgba(26, 23, 20, 0.08);
+  --shadow-lift: 0 12px 40px -18px rgba(26, 23, 20, 0.4);
+
+  /* shadcn token bridge — components read these */
+  --background: var(--bg);
+  --foreground: var(--text-primary);
+  --card: var(--surface);
+  --card-foreground: var(--text-primary);
+  --popover: var(--surface);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--stamp-red);
+  --primary-foreground: var(--ticket-paper);
+  --secondary: var(--surface-sunk);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--surface-sunk);
+  --muted-foreground: var(--text-muted);
+  --accent: var(--marquee-gold);
+  --accent-foreground: var(--ink);
+  --destructive: var(--status-cancelled-fg);
+  --destructive-foreground: var(--ticket-paper);
+  --border: var(--border-hair);
+  --input: var(--border-hair);
+  --ring: var(--ink);
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-stamp-red: var(--stamp-red);
+  --color-marquee-gold: var(--marquee-gold);
+  --color-ticket-paper: var(--ticket-paper);
+  --color-seat-free: var(--seat-free);
+  --color-ash: var(--ash);
+  --color-seat-taken: var(--seat-taken);
+
+  --color-tier-standard-outline: var(--tier-standard-outline);
+  --color-tier-premium-outline: var(--tier-premium-outline);
+  --color-tier-recliner-outline: var(--tier-recliner-outline);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-surface-sunk: var(--surface-sunk);
+  --color-border-strong: var(--border-strong);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-on-ink: var(--text-on-ink);
+
+  --font-voice: var(--font-voice);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --radius-sm: 6px;
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius-card);
+  --radius-xl: 16px;
+}
+
+@layer base {
+  body {
+    background-color: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    /* faint paper grain — the ticket is printed, not screen-native */
+    background-image:
+      radial-gradient(rgba(26, 23, 20, 0.022) 1px, transparent 1px);
+    background-size: 4px 4px;
+  }
+
+  ::selection {
+    background: var(--marquee-gold);
+    color: var(--ink);
+  }
+
+  h1, h2, h3, h4 {
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .font-voice { font-family: var(--font-voice); }
+  .font-mono { font-family: var(--font-mono); }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+}
+
+/* Hide scrollbars until scrolling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+*:hover {
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
