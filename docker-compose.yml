@@ -1,0 +1,45 @@
+# No redis service here, deliberately — ADR-013 Option D holds all shared
+# ephemeral state (JWT revocation, rate limiting) in MongoDB TTL
+# collections instead. Don't "fix" this by adding one.
+services:
+  server:
+    build: ./server
+    # No secret is duplicated into this file — every value lives in
+    # server/.env, which is gitignored (§A6.4, NFR-8).
+    env_file: ./server/.env
+    ports:
+      - '5000:5000'
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:5000/api/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+  client:
+    build:
+      context: ./client
+      args:
+        VITE_API_URL: /api
+        VITE_SOCKET_URL: ''
+        VITE_STRIPE_PUBLISHABLE_KEY: ${VITE_STRIPE_PUBLISHABLE_KEY:?Set VITE_STRIPE_PUBLISHABLE_KEY in your shell or a root .env before running docker compose up --build — see README.md §3}
+    ports:
+      - '8080:80'
+    depends_on:
+      server:
+        condition: service_healthy
+
+  # Offline fallback (R11) — a marker without Atlas access can still run
+  # the full stack against a local Mongo instance instead.
+  # Point server/.env's MONGODB_URI at mongodb://local-mongo:27017/encore_dev
+  # and run: docker compose --profile local-db up
+  local-mongo:
+    image: mongo:7
+    profiles: ['local-db']
+    ports:
+      - '27017:27017'
+    volumes:
+      - encore-mongo-data:/data/db
+
+volumes:
+  encore-mongo-data:
