@@ -1,0 +1,15 @@
+# Root-level tooling only (server/ and client/ have their own .gitignore).
+# This root package.json exists solely for @playwright/test (Phase 7 plan:
+# it's a root devDependency, not server's or client's) plus a few
+# convenience scripts.
+node_modules/
+
+# Root .env — Compose loads this automatically for build args like
+# VITE_STRIPE_PUBLISHABLE_KEY (README.md §3). Never commit it (ADR-007).
+/.env
+
+# Playwright artifacts (source lives in e2e/, playwright.config.ts)
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
